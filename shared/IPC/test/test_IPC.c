@@ -1,7 +1,7 @@
 #include "test_IPC.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <assert.h>
 
 
 int load_lib(char* path)
@@ -21,6 +21,18 @@ int close_lib()
 
 int main(int argv, char* argc[])
 {
+    int status = load_lib(IPC_LIBRARY_PATH);
+    printf("Library loaded! Return = %i\n",status);
+    assert(status != -1);
+
+    status = resolve_syms();
+    printf("Resolving symbols! Return = %i\n",status);
+    assert(status != -1);
+
+       
+    status = close_lib();
+    printf("Closinglibrary! Return = %i\n",status);
+    assert(status != -1);
 
 
     return -1;

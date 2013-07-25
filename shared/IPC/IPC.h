@@ -1,7 +1,7 @@
 
 static float IPC_version = IPC_VERSION;
 
-int start_com(int listenNum);
+int init_com(int listenNum);
 int peek(int* mess, int* len);
 int recieve(char* buff, int len);
 

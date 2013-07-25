@@ -1,6 +1,6 @@
 #include "IPC.h"
 
-int start_com(int portNum)
+int init_com(int portNum)
 {
     return -1;
 }
