@@ -5,8 +5,8 @@ VERSION = -DIPC_VERSION=0.1
 all: test_IPC
 
 test_IPC: test_IPC.o
-	$(CC) $(VERSION) test_IPC.o -o test_IPC 
+	$(CC) $(VERSION) -ldl test_IPC.o -o test_IPC.exe 
 test_IPC.o: test_IPC.c test_IPC.h
 	$(CC) $(CFLAGS) $(VERSION) test_IPC.c 
 clean:
-	rm -rf *.o test_IPC
+	rm -rf *.o test_IPC.exe
