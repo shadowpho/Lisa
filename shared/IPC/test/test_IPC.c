@@ -3,7 +3,28 @@
 #include <stdlib.h>
 #include <assert.h>
 
+char * dl_error;
+#define FUN_DLSYM(ret,name) do\
+    {(*(ret**)(&name)=dlsym(test_handle,#name));\
+        dl_error = dlerror();\
+        if(dl_error!=NULL)\
+        {\
+            printf("DL_ERROR: %s\n",dl_error);\
+            return -1;\
+        }\
+        if(name==NULL) return -1;\
+    printf("loaded %s,addr %p\n","name",(int*)name);\
+    }while(0);
+
 void static *test_handle;
+
+//functions
+int (*IPC_init)(int, int) = NULL;
+int (*IPC_peek)(int*, int*) = NULL;
+int (*IPC_recv)(char*,int) = NULL;
+int (*IPC_send)(int,int,char*,int)= NULL;
+float (*get_version)() = NULL;
+
 
 int load_lib(char* path)
 {
@@ -17,13 +38,20 @@ int load_lib(char* path)
     return 0;
 }
 
+//could be re-written
 int resolve_syms()
 {
-    return -1;
+    FUN_DLSYM(int, IPC_init);
+    FUN_DLSYM(int, IPC_peek);
+    FUN_DLSYM(int, IPC_recv);
+    FUN_DLSYM(int, IPC_send);
+    FUN_DLSYM(float, get_version);
+    return 0;
 }
 
 int close_lib()
 {
+    dlclose(test_handle);
     return -1;
 }
 
