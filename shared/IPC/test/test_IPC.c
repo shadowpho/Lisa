@@ -13,7 +13,7 @@ char * dl_error;
             return -1;\
         }\
         if(name==NULL) return -1;\
-    printf("loaded %s,addr %p\n","name",(int*)name);\
+    printf("loaded %s,addr %p\n",#name,(int*)name);\
     }while(0);
 
 void static *test_handle;
@@ -52,20 +52,24 @@ int resolve_syms()
 int close_lib()
 {
     dlclose(test_handle);
-    return -1;
+    return 0;
 }
 
 int main(int argv, char* argc[])
 {
     int status = load_lib(IPC_LIBRARY_PATH);
     printf("Library loaded! Return = %i\n",status);
-    assert(status != -1);
+    assert(status == 0);
 
     status = resolve_syms();
     printf("Resolving symbols! Return = %i\n",status);
-    assert(status != -1);
+    assert(status == 0);
 
-       
+    status = IPC_init(478,479);
+    perror("init");
+    assert(status ==0);
+
+
     status = close_lib();
     printf("Closinglibrary! Return = %i\n",status);
     assert(status != -1);

@@ -6,6 +6,7 @@ int static MASTER_SEND_SOCKET = 0;
 int static MASTER_LISTEN_PORT=0;
 int static MASTER_SEND_PORT=0;
 
+struct sockaddr_un send_addr;
 int IPC_init(int listenNum,int sendNum)
 {
     const char CON_PRE[] = "IPC_";
@@ -26,11 +27,17 @@ int IPC_init(int listenNum,int sendNum)
     sprintf(buff, "%d",MASTER_LISTEN_SOCKET);
     strncpy(addr.sun_path + (sizeof(CON_PRE)), buff, 33);
     //bind recv port
-    if( bind(MASTER_LISTEN_PORT, (struct sockaddr*) &addr, sizeof(addr.sun_path) -1))
+    if( bind(MASTER_LISTEN_SOCKET, (struct sockaddr*) &addr, sizeof(addr.sun_path) -1))
             return -1;
 
+    memcpy(&addr,&send_addr,sizeof(struct sockaddr_un));
+    sprintf(buff, "%d",MASTER_SEND_SOCKET);
+    strncpy(send_addr.sun_path + (sizeof(CON_PRE)), buff, 33);
     free(buff);
-    return -1;
+
+    printf("Recv Socket addr: %s\n",addr.sun_path);
+    printf("Send Socket addr: %s\n",send_addr.sun_path);
+    return 0;
 }
 
 int IPC_peek(int* mess, int* len)
@@ -45,6 +52,7 @@ int IPC_recv(char* buff, int len)
 
 int IPC_send(int program, int message, char* buff, int len)
 {
+
     return -1;
 }
 
