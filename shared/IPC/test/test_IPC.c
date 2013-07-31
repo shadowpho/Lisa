@@ -20,9 +20,11 @@ void static *test_handle;
 
 //functions
 int (*IPC_init)(int, int) = NULL;
+int (*IPC_close)(void) = NULL;
 int (*IPC_peek)(int*, int*) = NULL;
 int (*IPC_recv)(char*,int) = NULL;
 int (*IPC_send)(int,int,char*,int)= NULL;
+
 float (*get_version)() = NULL;
 
 
@@ -42,16 +44,23 @@ int load_lib(char* path)
 int resolve_syms()
 {
     FUN_DLSYM(int, IPC_init);
+    FUN_DLSYM(int, IPC_close);
     FUN_DLSYM(int, IPC_peek);
     FUN_DLSYM(int, IPC_recv);
     FUN_DLSYM(int, IPC_send);
     FUN_DLSYM(float, get_version);
+
     return 0;
 }
 
 int close_lib()
 {
+    int status = IPC_close();
     dlclose(test_handle);
+    if(status!=0) {
+        perror("closing");
+        return -1;
+    }
     return 0;
 }
 
@@ -66,14 +75,17 @@ int main(int argv, char* argc[])
     assert(status == 0);
 
     status = IPC_init(478,479);
-    perror("init");
-    assert(status ==0);
+    if(status!=0)
+    {
+        perror("init");
+        return -1;
+    }
 
 
     status = close_lib();
     printf("Closinglibrary! Return = %i\n",status);
     assert(status != -1);
 
-
+    printf("%s","ALL GOOD!!!\n");
     return -1;
 }

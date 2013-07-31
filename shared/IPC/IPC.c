@@ -6,11 +6,12 @@ int static MASTER_SEND_SOCKET = 0;
 int static MASTER_LISTEN_PORT=0;
 int static MASTER_SEND_PORT=0;
 
+struct sockaddr_un addr;
 struct sockaddr_un send_addr;
+
 int IPC_init(int listenNum,int sendNum)
 {
     const char CON_PRE[] = "IPC_";
-    struct sockaddr_un addr;
 
     MASTER_LISTEN_PORT = listenNum;
     MASTER_SEND_PORT = sendNum;
@@ -22,17 +23,17 @@ int IPC_init(int listenNum,int sendNum)
     //get the sockaddr_un in right order
     memset(&addr, 0, sizeof(struct sockaddr_un));
     addr.sun_family=AF_LOCAL;
-    strncpy(addr.sun_path, CON_PRE,sizeof(CON_PRE));
+     strncpy(addr.sun_path, CON_PRE,sizeof(CON_PRE));
     char * buff = malloc(33); //33 = max return size of itoa
-    sprintf(buff, "%d",MASTER_LISTEN_SOCKET);
-    strncpy(addr.sun_path + (sizeof(CON_PRE)), buff, 33);
+    sprintf(buff, "%d",MASTER_LISTEN_PORT);
+    strncpy(addr.sun_path -1 +(sizeof(CON_PRE)), buff, 33);
     //bind recv port
     if( bind(MASTER_LISTEN_SOCKET, (struct sockaddr*) &addr, sizeof(addr.sun_path) -1))
             return -1;
 
-    memcpy(&addr,&send_addr,sizeof(struct sockaddr_un));
-    sprintf(buff, "%d",MASTER_SEND_SOCKET);
-    strncpy(send_addr.sun_path + (sizeof(CON_PRE)), buff, 33);
+    memcpy(&send_addr,&addr,sizeof(struct sockaddr_un));
+    sprintf(buff, "%d",MASTER_SEND_PORT);
+    strncpy(send_addr.sun_path - 1 + (sizeof(CON_PRE)), buff, 33);
     free(buff);
 
     printf("Recv Socket addr: %s\n",addr.sun_path);
@@ -40,6 +41,14 @@ int IPC_init(int listenNum,int sendNum)
     return 0;
 }
 
+int IPC_close()
+{
+    int i = unlink(send_addr.sun_path);
+    i & unlink(addr.sun_path);
+    if(i!=0)
+        return -1;
+    return 0;
+}
 int IPC_peek(int* mess, int* len)
 {
     return -1;
