@@ -56,13 +56,18 @@ int IPC_peek(int* mess, int* len)
 
 int IPC_recv(char* buff, int len)
 {
+
     return -1;
 }
 
+//XXX -- make connect to other people
 int IPC_send(int program, int message, char* buff, int len)
 {
-
-    return -1;
+    int status = connect(MASTER_SEND_SOCKET, send_addr, sizeof(send_addr));
+    if(status == -1)
+        return -1;
+//    write();
+    return 0;
 }
 
 float get_version()
