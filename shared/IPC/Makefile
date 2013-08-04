@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -fPIC -g -c -Wall
-VERSION = -DIPC_VERSION=0.1
+VERSION = -DIPC_VERSION="\"0.1_linux\""
 
 all: IPC
 

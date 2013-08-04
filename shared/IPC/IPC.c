@@ -44,13 +44,14 @@ int IPC_init(int listenNum,int sendNum)
 int IPC_close()
 {
     int i = unlink(send_addr.sun_path);
-    i & unlink(addr.sun_path);
+    i &= unlink(addr.sun_path);
     if(i!=0)
         return -1;
     return 0;
 }
 int IPC_peek(int* mess, int* len)
 {
+//    int status = accept(
     return -1;
 }
 
@@ -63,14 +64,17 @@ int IPC_recv(char* buff, int len)
 //XXX -- make connect to other people
 int IPC_send(int program, int message, char* buff, int len)
 {
-    int status = connect(MASTER_SEND_SOCKET, send_addr, sizeof(send_addr));
+    int status = connect(MASTER_SEND_SOCKET, &send_addr, sizeof(send_addr));
     if(status == -1)
         return -1;
 //    write();
+    status = close(MASTER_SEND_SOCKET);
+    if(status == -1)
+        return -1;
     return 0;
 }
 
-float get_version()
+const char* get_version()
 {
     return IPC_version;
 }

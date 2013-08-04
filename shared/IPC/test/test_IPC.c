@@ -25,7 +25,7 @@ int (*IPC_peek)(int*, int*) = NULL;
 int (*IPC_recv)(char*,int) = NULL;
 int (*IPC_send)(int,int,char*,int)= NULL;
 
-float (*get_version)() = NULL;
+const char* (*get_version)() = NULL;
 
 
 int load_lib(char* path)
@@ -48,7 +48,7 @@ int resolve_syms()
     FUN_DLSYM(int, IPC_peek);
     FUN_DLSYM(int, IPC_recv);
     FUN_DLSYM(int, IPC_send);
-    FUN_DLSYM(float, get_version);
+    FUN_DLSYM(char*, get_version);
 
     return 0;
 }
@@ -74,6 +74,8 @@ int main(int argv, char* argc[])
     printf("Resolving symbols! Return = %i\n",status);
     assert(status == 0);
 
+    printf("Library version tested: %s\n", get_version());
+
     status = IPC_init(478,479);
     if(status!=0)
     {
@@ -81,6 +83,14 @@ int main(int argv, char* argc[])
         return -1;
     }
 
+    status = IPC_send(0, 0, NULL, 0);
+    assert(status == 0);
+
+    status = IPC_peek(NULL, NULL);
+    assert(status == 0);
+
+    status = IPC_recv(NULL, 0);
+    assert(status == 0);
 
     status = close_lib();
     printf("Closinglibrary! Return = %i\n",status);
