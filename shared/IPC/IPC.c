@@ -27,6 +27,9 @@ int IPC_init(int listenNum,int sendNum)
     char * buff = malloc(33); //33 = max return size of itoa
     sprintf(buff, "%d",MASTER_LISTEN_PORT);
     strncpy(addr.sun_path -1 +(sizeof(CON_PRE)), buff, 33);
+    //
+    IPC_close(); //attempt to unlink!
+    //
     //bind recv port
     if( bind(MASTER_LISTEN_SOCKET, (struct sockaddr*) &addr, sizeof(addr.sun_path) -1))
             return -1;
