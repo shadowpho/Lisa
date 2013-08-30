@@ -65,9 +65,9 @@ int IPC_recv(char* buff, int len)
 }
 
 //XXX -- make connect to other people
-int IPC_send(int program, int message, char* buff, int len)
+int IPC_send(int port, int message, char* buff, int len)
 {
-    int status = connect(MASTER_SEND_SOCKET, &send_addr, sizeof(send_addr));
+    int status = connect(MASTER_SEND_SOCKET, &addr, sizeof(send_addr));
     if(status == -1)
         return -1;
 //    write();

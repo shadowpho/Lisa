@@ -64,38 +64,36 @@ int close_lib()
     return 0;
 }
 
+#define CHECK_ERROR(var,fun_str) do{\
+    printf("%s = %d\n",fun_str,var);\
+    if((var)!=0){printf("Error at line: %d, error:\n",__LINE__);perror(fun_str);return -1;}\
+    }while(0);
+
 int main(int argv, char* argc[])
 {
     int status = load_lib(IPC_LIBRARY_PATH);
-    printf("Library loaded! Return = %i\n",status);
-    assert(status == 0);
+    CHECK_ERROR(status,"load library");
 
     status = resolve_syms();
-    printf("Resolving symbols! Return = %i\n",status);
-    assert(status == 0);
+    CHECK_ERROR(status,"resolve symbols");
 
     printf("Library version tested: %s\n", get_version());
 
     status = IPC_init(478,479);
-    if(status!=0)
-    {
-        perror("init");
-        return -1;
-    }
+    CHECK_ERROR(status,"init ipc");
 
     status = IPC_send(0, 0, NULL, 0);
-    assert(status == 0);
+    CHECK_ERROR(status,"send");
 
     status = IPC_peek(NULL, NULL);
-    assert(status == 0);
+    CHECK_ERROR(status,"peek");
 
     status = IPC_recv(NULL, 0);
-    assert(status == 0);
+    CHECK_ERROR(status,"recv");
 
     status = close_lib();
-    printf("Closinglibrary! Return = %i\n",status);
-    assert(status != -1);
+    CHECK_ERROR(status,"close lib");
 
     printf("%s","ALL GOOD!!!\n");
-    return -1;
+    return 0;
 }
