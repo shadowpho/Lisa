@@ -1,4 +1,4 @@
 *.o
 *.so*
 *.exe
-*gdbhistory
+.gdb_history

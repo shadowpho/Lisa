@@ -7,15 +7,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
+#include <stdint.h>
 
 static const char* IPC_version = IPC_VERSION;
 
-int IPC_init(int listenNum,int sendNum);
+int IPC_init();
+int IPC_listen(int recvPort, uint8_t local);
 int IPC_close();
-int IPC_peek(int* mess, int* len);
-int IPC_recv(char* buff, int len);
-int IPC_send(int port, int message, char* buff, int len);
+int IPC_recv(uint8_t* buff, uint32_t copied, uint32_t max_len);
+int IPC_send(int ip, int port, int message, uint8_t* buff, uint32_t len);
 
 const char* get_version();
 
